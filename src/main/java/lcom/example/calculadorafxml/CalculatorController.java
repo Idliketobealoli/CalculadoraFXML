@@ -1,5 +1,6 @@
 package lcom.example.calculadorafxml;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,41 +35,8 @@ public class CalculatorController {
     @FXML private VBox vBox;
     Model model = Model.getInstance();
 
-    @FXML public void onOnePressed(){
-        pantallaAbajo.setText(manageNumberPressed("1"));
-    }
-    @FXML public void onTwoPressed(){
-        pantallaAbajo.setText(manageNumberPressed("2"));
-    }
-    @FXML public void onThreePressed(){
-        pantallaAbajo.setText(manageNumberPressed("3"));
-    }
-    @FXML public void onFourPressed(){
-        pantallaAbajo.setText(manageNumberPressed("4"));
-    }
-    @FXML public void onFivePressed(){
-        pantallaAbajo.setText(manageNumberPressed("5"));
-    }
-    @FXML public void onSixPressed(){
-        pantallaAbajo.setText(manageNumberPressed("6"));
-    }
-    @FXML public void onSevenPressed(){
-        pantallaAbajo.setText(manageNumberPressed("7"));
-    }
-    @FXML public void onEightPressed(){
-        pantallaAbajo.setText(manageNumberPressed("8"));
-    }
-    @FXML public void onNinePressed(){
-        pantallaAbajo.setText(manageNumberPressed("9"));
-    }
-    @FXML public void onZeroPressed(){
-        pantallaAbajo.setText(manageNumberPressed("0"));
-    }
-    @FXML public void onDecimalPressed(){
-        pantallaAbajo.setText(manageNumberPressed("."));
-    }
-
-    private String manageNumberPressed(String e) {
+    @FXML public void manageNumberPressed(ActionEvent ev) {
+        String e = ((Button) ev.getSource()).getText();
         if (model.getOperator().equalsIgnoreCase("")) {
             if (!model.getNum1().equalsIgnoreCase("")) {
                 if (e.equalsIgnoreCase(".") && model.getNum1().contains(".")) {
@@ -88,38 +56,19 @@ public class CalculatorController {
                 model.setNum2(e);
             } else model.setNum2("0.");
         }
-        return model.getOperationSoFar();
+        pantallaAbajo.setText(model.getOperationSoFar());
     }
 
-    @FXML public void operationAdd(){
-        pantallaAbajo.setText(manageOperation("+"));
-    }
-    @FXML public void operationSubtract(){
-        pantallaAbajo.setText(manageOperation("-"));
-    }
-    @FXML public void operationMultiply(){
-        pantallaAbajo.setText(manageOperation("*"));
-    }
-    @FXML public void operationDivide(){
-        pantallaAbajo.setText(manageOperation("/"));
-    }
-    @FXML public void operationModule(){
-        pantallaAbajo.setText(manageOperation("%"));
-    }
-
-    private String manageOperation(String e) {
+    @FXML public void manageOperation(ActionEvent ev) {
+        String e = ((Button) ev.getSource()).getText();
         if (model.getNum1().equalsIgnoreCase("")) {
             model.setNum1("0");
         }
         model.setOperator(e);
-        return model.getOperationSoFar();
+        pantallaAbajo.setText(model.getOperationSoFar());
     }
 
-    @FXML public void onBackspacePress(){
-        pantallaAbajo.setText(manageBackspace());
-    }
-
-    private String manageBackspace() {
+    @FXML public void manageBackspace() {
         if (!model.getNum2().equalsIgnoreCase("")) {
             if (model.getNum2().length() == 1) {
                 model.setNum2("");
@@ -143,25 +92,16 @@ public class CalculatorController {
                 model.setNum1(sb.toString());
             }
         }
-        return model.getOperationSoFar();
+        pantallaAbajo.setText(model.getOperationSoFar());
     }
 
-    @FXML public void onClearPressed(){
-        pantallaAbajo.setText(manageClear());
-        pantallaArriba.setText(manageClear());
-    }
-
-    private String manageClear() {
+    @FXML public void manageClear() {
         model.reset();
-        return model.getOperationSoFar();
+        pantallaAbajo.setText(model.getOperationSoFar());
+        pantallaArriba.setText(model.getOperationSoFar());
     }
 
-    @FXML public void onEqualPressed() {
-        pantallaAbajo.setText(manageEqual());
-        pantallaArriba.setText(getOperationSoFar());
-    }
-
-    private String manageEqual() {
+    @FXML public void manageEqual() {
         if (!model.getNum2().equalsIgnoreCase("")) {
             model.setResult(Double.parseDouble(model.getNum1()),
                     Double.parseDouble(model.getNum2()),
@@ -169,10 +109,7 @@ public class CalculatorController {
         } else if (!model.getNum1().equalsIgnoreCase("")) {
             model.setResult(Double.parseDouble(model.getNum1()), 0.0, "+");
         } else model.setResult(0.0, 0.0, "+");
-        return model.getResult();
-    }
-
-    private String getOperationSoFar() {
-        return model.getOperationSoFar();
+        pantallaAbajo.setText(model.getResult());
+        pantallaArriba.setText(model.getOperationSoFar());
     }
 }
